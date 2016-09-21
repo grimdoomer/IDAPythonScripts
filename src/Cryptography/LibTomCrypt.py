@@ -1,4 +1,10 @@
 """
+    Author: Ryan Miceli
+
+    Created: 9/20/16
+
+    LibTomCrypt.py:
+        Python script for IDA to help label functions from the LibTomCrypt cryptography library.
 
 """
 
