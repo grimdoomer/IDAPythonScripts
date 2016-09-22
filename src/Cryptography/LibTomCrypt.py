@@ -44,7 +44,7 @@ def findStringInList(stringList, subString):
     # Loop through all the strings in the list.
     for i in range(0, len(stringList)):
         # Check if the current string contains the substring.
-        print stringList[i].str
+        #print stringList[i].str
         index = stringList[i].str.find(subString)
         if (index != -1):
             return i
@@ -69,10 +69,11 @@ def labelFunction(stringList, keyword, funcName):
                 startAddr = SearchUtilities.findFunctionStart(xref.frm, 10)  # Only search 10 instructions back.
                 if (startAddr != BADADDR):
                     # Check if there is an existing function name at this address, if not create the function.
-                    if (idc.GetFunctionName(startAddr) == None):
+                    if (idc.GetFunctionName(startAddr) == ""):
                         # Try to create the function name name it.
                         if (idc.MakeFunction(startAddr) != 0):
                             set_name(startAddr, funcName)
+                            print "Found \'%s\'..." % funcName
                             #print "LibTomCrypt::labelFunction(): addr=0x%08x" % startAddr
                         else:
                             # Failed to make function.
@@ -80,6 +81,7 @@ def labelFunction(stringList, keyword, funcName):
                     else:
                         # The function already exists, just rename it.
                         set_name(startAddr, funcName)
+                        print "Found \'%s\'..." % funcName
                 else:
                     # Unable to find the function start.
                     print "LibTomCrypt::labelFunction(): Unable to find function start for %s!" % funcName
@@ -91,11 +93,38 @@ def labelFunction(stringList, keyword, funcName):
 
 
 def labelRSAFunctions(stringList):
+    # rsa_decrypt_key.c
+    labelFunction(stringList, "rsa_decrypt_key.c", "LTC_rsa_decrypt_key_ex")
+
+    # rsa_encrypt_key.c
+    labelFunction(stringList, "rsa_encrypt_key.c", "LTC_rsa_encrypt_key_ex")
+
+    # rsa_export.c
+    labelFunction(stringList, "rsa_export.c", "LTC_rsa_export")
+
+    # rsa_exptmod.c
+    labelFunction(stringList, "rsa_exptmod.c", "LTC_rsa_exptmod")
+
+    # rsa_free.c
+    labelFunction(stringList, "rsa_free.c", "LTC_rsa_free")
+
+    # rsa_get_size.c
+    labelFunction(stringList, "rsa_get_size.c", "LTC_rsa_get_size")
+
     # rsa_import.c
     labelFunction(stringList, "rsa_import.c", "LTC_rsa_import")
 
+    # rsa_make_key.c
+    labelFunction(stringList, "rsa_make_key.c", "LTC_rsa_make_key")
+
+    # rsa_sign_hash.c
+    labelFunction(stringList, "rsa_sign_hash.c", "LTC_rsa_sign_hash_ex")
+
+    # rsa_sign_saltlen_get.c
+    labelFunction(stringList, "rsa_sign_saltlen_get.c", "LTC_rsa_sign_saltlen_get_max_ex")
+
     # rsa_verify_hash.c
-    labelFunction(stringList, "rsa_verify_hash.c", "LTC_verify_hash")
+    labelFunction(stringList, "rsa_verify_hash.c", "LTC_rsa_verify_hash_ex")
 
 
 def main():
