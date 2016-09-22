@@ -11,6 +11,8 @@
 from idaapi import *
 from idautils import *
 from collections import namedtuple
+from Utilties import SearchUtilities
+from idc import *
 
 # Create various Tuples to help us store data.
 AddressableString = namedtuple('AddressableString', 'str, ea')
@@ -63,27 +65,34 @@ def labelFunction(stringList, keyword, funcName):
             for xref in xrefList:
                 #print "xref=0x%08x" % xref.frm
 
-                # We need to create the function just in case it doesn't already exist.
-
-                # Now get the function address which should be good.
-                funcAddr = get_func(xref.frm).startEA
-
-                # Label the function.
-                if (funcAddr != idaapi.BADADDR):
-                    #set_name(funcAddr, funcName)
-                    print "addr=0x%08x" % funcAddr
+                # Find the start of this function in case the function does already exist.
+                startAddr = SearchUtilities.findFunctionStart(xref.frm, 10)  # Only search 10 instructions back.
+                if (startAddr != BADADDR):
+                    # Check if there is an existing function name at this address, if not create the function.
+                    if (idc.GetFunctionName(startAddr) == None):
+                        # Try to create the function name name it.
+                        if (idc.MakeFunction(startAddr) != 0):
+                            set_name(startAddr, funcName)
+                            #print "LibTomCrypt::labelFunction(): addr=0x%08x" % startAddr
+                        else:
+                            # Failed to make function.
+                            print "LibTomCrypt::labelFunction(): Failed to make function for %s!" % keyword
+                    else:
+                        # The function already exists, just rename it.
+                        set_name(startAddr, funcName)
                 else:
-                    print "Unable to find function for xref to %s, skipping function..." % keyword
+                    # Unable to find the function start.
+                    print "LibTomCrypt::labelFunction(): Unable to find function start for %s!" % funcName
 
                 # Break the loop, we only wanted the first entry.
                 break
         else:
-            print "No xrefs to %s string found, skipping function..." % keyword
+            print "LibTomCrypt::labelFunction(): No xrefs to %s string found, skipping function..." % keyword
 
 
 def labelRSAFunctions(stringList):
     # rsa_import.c
-    #labelFunction(stringList, "rsa_import.c", "LTC_rsa_import")
+    labelFunction(stringList, "rsa_import.c", "LTC_rsa_import")
 
     # rsa_verify_hash.c
     labelFunction(stringList, "rsa_verify_hash.c", "LTC_verify_hash")
