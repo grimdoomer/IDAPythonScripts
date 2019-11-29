@@ -108,7 +108,7 @@ def main():
 				idc.MakeFunction(symbolAddress)
 				
 				# Put a comment in the function with extended info.
-				idc.MakeFunctionCmt(symbolAddress, str("FP: %d\nFunction Size: 0x%x\nReturn Register: r%d\nMask: 0x%08x\nMask Offset: %d\nSource File Name: %s\n Line Number: %d" % 
+				idc.MakeComm(symbolAddress, str("FP: %d\nFunction Size: 0x%x\nReturn Register: r%d\nMask: 0x%08x\nMask Offset: %d\nSource File Name: %s\n Line Number: %d" % 
 					(framePointer, functionSize, returnRegister, mask, maskOffset, sourceFileName, lineNumber)))
 				
 				# Create the symbol name.
