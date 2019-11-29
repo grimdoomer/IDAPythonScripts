@@ -101,7 +101,7 @@ def main():
 				lineNumber = struct.unpack('I', file.read(4))[0]
 				fileNameLength = struct.unpack('B', file.read(1))[0]
 				sourceFileName = file.read(fileNameLength).decode('utf-8')
-				sybmolNameLength = struct.unpack('B', file.read(1))[0]
+				symbolNameLength = struct.unpack('B', file.read(1))[0]
 				symbolName = file.read(symbolNameLength).decode('utf-8')
 				
 				# Make this code block a function.
